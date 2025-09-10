@@ -79,10 +79,15 @@ This allows arcade.dev to access your locally running environment. For more info
 
 Follow Step 7 from the [Create a Toolkit page](https://docs.arcade.dev/home/build-tools/create-a-toolkit) to setup access to your worker. Make sure to copy the publicly accessible URL from ngrok and enter it into the `URL` field. It will look like `https://random_numbers_letters.ngrok-free.app`
 
-6. **Run the LangGraph workflow**:
+6. **Open the Todoist web interface**
+
+Keep the [Todoist web interface](https://app.todoist.com/app/inbox) open in a window to the side of your terminal so watch the updates as they happen.
+
+7. **Run the LangGraph workflow**:
    ```sh
    python project_workflow.py
    ```
+
 
 ### What the workflow does
 
