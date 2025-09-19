@@ -51,8 +51,8 @@ The toolkit includes a complete example workflow that demonstrates how to use th
    ```sh
    export ARCADE_API_KEY="your_arcade_api_key"
    export OPENAI_API_KEY="your_openai_api_key"
-   export TODOIST_API_TOKEN="your_todoist_api_token"
    export ARCADE_USER_ID="your_email@example.com"
+   # No Todoist token needed; OAuth prompts the user at runtime
    ```
 
 3. **Setup environment** (if not already setup):
@@ -87,6 +87,10 @@ Keep the [Todoist web interface](https://app.todoist.com/app/inbox) open in a wi
    ```sh
    python project_workflow.py
    ```
+
+## Authentication
+
+This toolkit uses OAuth with Todoist via Arcade. When a tool is called, Arcade will prompt the user to authorize Todoist if not already authorized, then pass the access token to the tool. There is no need to set `TODOIST_API_TOKEN`.
 
 
 ### What the workflow does

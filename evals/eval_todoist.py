@@ -40,10 +40,6 @@ def todoist_eval_suite() -> EvalSuite:
         critics=[
             SimilarityCritic(critic_field="name", weight=0.5),
         ],
-#        additional_messages=[
-#            {"role": "user", "content": "I am using the task manager called Todoist for my projects."},
-#            {"role": "assistant", "content": "I understand you're using Todoist to manage projects. How can I help you with your projects?"},
-#        ],
     )
 
     suite.add_case(
@@ -55,10 +51,6 @@ def todoist_eval_suite() -> EvalSuite:
         critics=[
             SimilarityCritic(critic_field="content", weight=0.5),
         ],
-#        additional_messages=[
-#            {"role": "user", "content": "I am using the task manager called Todoist for my projects."},
-#            {"role": "assistant", "content": "I understand you're using Todoist to manage projects. How can I help you with your projects?"},
-#        ],
     )
 
     return suite

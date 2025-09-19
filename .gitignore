@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+variables.sh
+.todoist_oauth_state
+
 # C extensions
 *.so
 

@@ -1,16 +1,18 @@
 from typing import List, Dict, Any, Optional, Annotated, cast
 import httpx
 from arcade_tdk import tool, ToolContext
+from arcade_tdk.auth import OAuth2
 from todoist.tools.client import TodoistClient
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+# Require OAuth2 so Arcade prompts the user to authorize Todoist
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def list_projects(ctx: ToolContext) -> str:
     """
     Return the user's Todoist projects.
     Returns a formatted string listing all projects with their IDs and names.
-    Requires secret: TODOIST_API_TOKEN
+    Requires OAuth authorization with Todoist
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     result = TodoistClient(token).get("/projects")
     if not result:
         return "No projects found."
@@ -25,7 +27,8 @@ def list_projects(ctx: ToolContext) -> str:
     
     return "\n".join(project_list)
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+# Require OAuth2 so Arcade prompts the user to authorize Todoist
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def create_project(
     ctx: ToolContext,
     name: Annotated[str, "The name of the project (required)"],
@@ -40,9 +43,9 @@ def create_project(
         project_id = project["id"]  # Use this ID to add tasks
         add_task("Task content", project_id=project_id)
     
-    Requires secret: TODOIST_API_TOKEN
+    Requires OAuth authorization with Todoist
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     payload = {k: v for k, v in dict(
         name=name
     ).items() if v is not None}
@@ -56,13 +59,14 @@ def create_project(
     
     return result
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+# Require OAuth2 so Arcade prompts the user to authorize Todoist
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def delete_project(ctx: ToolContext, project_id: Annotated[str, "The ID of the project to delete"]) -> bool:
     """
     Delete a project in Todoist.
-    Requires secret: TODOIST_API_TOKEN
+    Requires OAuth authorization with Todoist
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     # Use DELETE method instead of POST
     with httpx.Client(timeout=15) as c:
         r = c.delete(f"https://api.todoist.com/rest/v2/projects/{project_id}", 

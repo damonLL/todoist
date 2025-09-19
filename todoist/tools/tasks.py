@@ -1,9 +1,10 @@
 from typing import Optional, List, Dict, Any, Annotated, cast
 import httpx
 from arcade_tdk import tool, ToolContext
+from arcade_tdk.auth import OAuth2
 from todoist.tools.client import TodoistClient
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def list_tasks(
     ctx: ToolContext,
     project_id: Annotated[Optional[str], "Filter by project ID"]=None,
@@ -15,7 +16,7 @@ def list_tasks(
     List active tasks (REST v2). If `filter` is set, it takes precedence.
     Returns a formatted string listing all tasks with their details.
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     params = {k: v for k, v in dict(project_id=project_id, filter=filter, label=label, lang=lang).items() if v is not None}
     result = TodoistClient(token).get("/tasks", params=params)
     if not result:
@@ -35,7 +36,7 @@ def list_tasks(
     
     return "\n".join(task_list)
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def add_task(
     ctx: ToolContext,
     content: Annotated[str, "Task content (required)"],
@@ -48,7 +49,7 @@ def add_task(
     Create a task (REST v2) and return the created task.
     Returns the full task object including the task ID.
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     payload = {k: v for k, v in dict(content=content, project_id=project_id, due_string=due_string, order=order, priority=priority).items() if v is not None}
     
     try:
@@ -62,21 +63,21 @@ def add_task(
         # Re-raise with more context
         raise RuntimeError(f"Failed to create task with payload {payload}: {e}") from e
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def close_task(ctx: ToolContext, task_id: Annotated[str, "Task ID"]) -> bool:
     """
     Mark a task complete (REST v2). Returns True on 204 success.
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     return cast(bool, TodoistClient(token).post(f"/tasks/{task_id}/close"))
 
 
-@tool(requires_secrets=["TODOIST_API_TOKEN"])
+@tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
 def delete_task(ctx: ToolContext, task_id: Annotated[str, "Task ID"]) -> bool:
     """
     Delete a task (REST v2). Returns True on 204 success.
     """
-    token = ctx.get_secret("TODOIST_API_TOKEN")
+    token = ctx.get_auth_token_or_empty()
     # Use DELETE method instead of POST
     with httpx.Client(timeout=15) as c:
         r = c.delete(f"https://api.todoist.com/rest/v2/tasks/{task_id}", 

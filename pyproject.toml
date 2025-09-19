@@ -13,6 +13,7 @@ dependencies = [
     "arcade-serve>=2.0.0",
     "arcade-tdk>=2.0.0,<3.0.0",
     "httpx>=0.27",
+    "langchain>=0.3.27",
     "langchain-arcade>=1.0.0",
     "langchain-openai>=0.3.23",
     "langgraph>=0.2.76",
