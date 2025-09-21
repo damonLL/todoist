@@ -45,14 +45,15 @@ The toolkit includes a complete example workflow that demonstrates how to use th
   - Click on your user profile in the upper left.
   - Settings -> Integrations
   - Click on the 'Developer' tab
-  - Create or copy your API_TOKEN
+  - Optional (for local testing only): create or copy your TODOIST_API_TOKEN token
 
 2. **Set up environment variables**:
    ```sh
    export ARCADE_API_KEY="your_arcade_api_key"
    export OPENAI_API_KEY="your_openai_api_key"
    export ARCADE_USER_ID="your_email@example.com"
-   # No Todoist token needed; OAuth prompts the user at runtime
+   # Optional for local testing fallback (see Local testing below)
+   # export TODOIST_API_TOKEN="your_todoist_api_token"
    ```
 
 3. **Setup environment** (if not already setup):
@@ -88,9 +89,33 @@ Keep the [Todoist web interface](https://app.todoist.com/app/inbox) open in a wi
    python project_workflow.py
    ```
 
+   Note: this file has been moved to the `old` directory and the instructions here need to be updated.
+
 ## Authentication
 
-This toolkit uses OAuth with Todoist via Arcade. When a tool is called, Arcade will prompt the user to authorize Todoist if not already authorized, then pass the access token to the tool. There is no need to set `TODOIST_API_TOKEN`.
+This toolkit uses OAuth with Todoist via Arcade. When a tool is called, Arcade will prompt the user to authorize Todoist if not already authorized, then pass the access token to the tool. There is no need to set `TODOIST_API_TOKEN` for end users.
+
+- Ensure you have configured a Todoist OAuth provider in Arcade and use its ID in code. The tools are currently configured with `OAuth2(id="todoist-oath-provider", scopes=["data:read_write"])`. Update the ID here or in your Arcade dashboard to match.
+
+### Local testing (optional)
+
+For local scripts/tests outside the Arcade dashboard, the tools will fall back to `TODOIST_API_TOKEN` if no OAuth token is present.
+
+1) Activate your virtualenv and export your token in the same shell:
+```sh
+source .venv/bin/activate
+export TODOIST_API_TOKEN=your_todoist_token
+```
+
+2) Run your script/tests:
+```sh
+python old/project_workflow.py
+# or
+pytest -m "not slow and not network"
+```
+
+Notes:
+- When invoked via the Arcade dashboard or sandbox, OAuth remains the primary auth mechanism. The fallback token is only used if no OAuth token is available.
 
 
 ### What the workflow does
