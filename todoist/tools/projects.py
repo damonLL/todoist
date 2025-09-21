@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Optional, Annotated, cast
 import httpx
 from arcade_tdk import tool, ToolContext
 from arcade_tdk.auth import OAuth2
-from todoist.tools.client import TodoistClient
+from todoist.tools.client import TodoistClient, resolve_todoist_token
 
 # Require OAuth2 so Arcade prompts the user to authorize Todoist
 @tool(requires_auth=OAuth2(id="todoist-oath-provider", scopes=["data:read_write"]))
@@ -12,7 +12,7 @@ def list_projects(ctx: ToolContext) -> str:
     Returns a formatted string listing all projects with their IDs and names.
     Requires OAuth authorization with Todoist
     """
-    token = ctx.get_auth_token_or_empty()
+    token = resolve_todoist_token(ctx)
     result = TodoistClient(token).get("/projects")
     if not result:
         return "No projects found."
@@ -45,7 +45,7 @@ def create_project(
     
     Requires OAuth authorization with Todoist
     """
-    token = ctx.get_auth_token_or_empty()
+    token = resolve_todoist_token(ctx)
     payload = {k: v for k, v in dict(
         name=name
     ).items() if v is not None}
@@ -66,7 +66,7 @@ def delete_project(ctx: ToolContext, project_id: Annotated[str, "The ID of the p
     Delete a project in Todoist.
     Requires OAuth authorization with Todoist
     """
-    token = ctx.get_auth_token_or_empty()
+    token = resolve_todoist_token(ctx)
     # Use DELETE method instead of POST
     with httpx.Client(timeout=15) as c:
         r = c.delete(f"https://api.todoist.com/rest/v2/projects/{project_id}", 

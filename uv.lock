@@ -50,6 +50,17 @@ wheels = [
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "arcade-serve" },
+    { name = "arcade-tdk" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "python-dateutil" },
+    { name = "pytz" },
+    { name = "scikit-learn" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.16.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
 evals = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -2136,15 +2147,17 @@ name = "todoist"
 version = "0.1.1"
 source = { editable = "." }
 dependencies = [
-    { name = "arcade-ai", extra = ["evals"] },
+    { name = "arcade-ai", extra = ["all", "evals"] },
     { name = "arcade-core" },
     { name = "arcade-serve" },
     { name = "arcade-tdk" },
+    { name = "coverage" },
     { name = "httpx" },
     { name = "langchain" },
     { name = "langchain-arcade" },
     { name = "langchain-openai" },
     { name = "langgraph" },
+    { name = "mypy" },
     { name = "pydantic" },
     { name = "pytest" },
 ]
@@ -2165,17 +2178,19 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "arcade-ai", extras = ["evals"], specifier = ">=2.1.4" },
+    { name = "arcade-ai", extras = ["all", "evals"], specifier = ">=2.1.4" },
     { name = "arcade-ai", extras = ["evals"], marker = "extra == 'dev'", specifier = ">=2.1.4,<3.0.0" },
     { name = "arcade-core", specifier = ">=2.3.0" },
     { name = "arcade-serve", specifier = ">=2.0.0" },
     { name = "arcade-serve", marker = "extra == 'dev'", specifier = ">=2.0.0,<3.0.0" },
     { name = "arcade-tdk", specifier = ">=2.0.0,<3.0.0" },
+    { name = "coverage", specifier = ">=7.10.6" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "langchain", specifier = ">=0.3.27" },
     { name = "langchain-arcade", specifier = ">=1.0.0" },
     { name = "langchain-openai", specifier = ">=0.3.23" },
     { name = "langgraph", specifier = ">=0.2.76" },
+    { name = "mypy", specifier = ">=1.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.5.1,<1.6.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.4.0,<3.5.0" },
     { name = "pydantic", specifier = ">=2.11.7" },
